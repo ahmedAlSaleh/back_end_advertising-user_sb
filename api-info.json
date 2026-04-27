@@ -1,0 +1,166 @@
+{
+  "api_info": {
+    "name": "Advertising Platform API",
+    "version": "1.0.0",
+    "last_updated": "2024-12-10",
+    "base_url": "http://localhost:8000/api",
+    "documentation_files": [
+      "API_DOCUMENTATION.md",
+      "API_ENDPOINTS_QUICK_REFERENCE.md",
+      "API_README.md",
+      "API_DOCUMENTATION_GUIDE.md",
+      "API_DOCUMENTATION_SUMMARY.md",
+      "Advertising_Platform_API.postman_collection.json"
+    ]
+  },
+  "statistics": {
+    "total_endpoints": 78,
+    "public_endpoints": 28,
+    "protected_endpoints": 50,
+    "categories": 16
+  },
+  "endpoints_by_category": {
+    "Authentication": 6,
+    "User Profile": 2,
+    "Trader Profile": 3,
+    "Advertisements": 12,
+    "Posts": 7,
+    "Stores": 8,
+    "Categories": 1,
+    "Favorites": 4,
+    "Blocks": 2,
+    "Ratings": 2,
+    "Search": 3,
+    "Wallet & Points": 3,
+    "Analytics": 3,
+    "Promotions": 2,
+    "Reports": 3,
+    "Support & Utility": 4
+  },
+  "endpoints_by_method": {
+    "GET": 45,
+    "POST": 31,
+    "PUT": 1,
+    "DELETE": 1
+  },
+  "key_features": [
+    "User & Trader Authentication",
+    "Advertisement Management",
+    "Store Management",
+    "Social Features (Posts, Likes)",
+    "Search & Filtering",
+    "Analytics & Reporting",
+    "Promotion System",
+    "Points & Wallet System",
+    "Rating & Review System",
+    "Report & Moderation"
+  ],
+  "supported_languages": [
+    "Arabic (Primary)",
+    "English"
+  ],
+  "supported_cities": [
+    "بغداد",
+    "البصرة",
+    "أربيل",
+    "النجف",
+    "كربلاء",
+    "الموصل",
+    "السليمانية",
+    "ديالى",
+    "الأنبار",
+    "ذي قار",
+    "بابل",
+    "كركوك",
+    "واسط",
+    "دهوك"
+  ],
+  "authentication": {
+    "type": "Bearer Token (Laravel Sanctum)",
+    "user_endpoints": {
+      "register": "POST /api/user/register",
+      "login": "POST /api/user/login",
+      "logout": "GET /api/user/logout"
+    },
+    "trader_endpoints": {
+      "register": "POST /api/trader/register",
+      "login": "POST /api/trader/login",
+      "logout": "GET /api/trader/logout"
+    }
+  },
+  "main_categories": [
+    {
+      "name": "Authentication",
+      "endpoints": 6,
+      "description": "User and Trader registration, login, logout"
+    },
+    {
+      "name": "Advertisements",
+      "endpoints": 12,
+      "description": "Create, manage, browse, and promote advertisements"
+    },
+    {
+      "name": "Posts",
+      "endpoints": 7,
+      "description": "Social posts, likes, and interactions"
+    },
+    {
+      "name": "Stores",
+      "endpoints": 8,
+      "description": "Store management, hours, and browsing"
+    },
+    {
+      "name": "Analytics",
+      "endpoints": 3,
+      "description": "Business analytics and performance tracking"
+    },
+    {
+      "name": "Search",
+      "endpoints": 3,
+      "description": "Basic and advanced search functionality"
+    },
+    {
+      "name": "Promotions",
+      "endpoints": 2,
+      "description": "Advertisement promotion packages"
+    },
+    {
+      "name": "Reports",
+      "endpoints": 3,
+      "description": "Content reporting and moderation"
+    }
+  ],
+  "testing": {
+    "postman_collection": "Advertising_Platform_API.postman_collection.json",
+    "environment_variables": {
+      "base_url": "http://localhost:8000/api",
+      "token": ""
+    },
+    "sample_credentials": {
+      "user": {
+        "phone": "07701234567",
+        "password": "password123"
+      },
+      "trader": {
+        "phone": "07701234567",
+        "password": "password123"
+      }
+    }
+  },
+  "rate_limiting": {
+    "guest": "60 requests per minute",
+    "authenticated": "120 requests per minute"
+  },
+  "response_format": {
+    "success": {
+      "status": true,
+      "message": "string",
+      "data": "object"
+    },
+    "error": {
+      "status": false,
+      "message": "string",
+      "errors": "object"
+    }
+  }
+}
