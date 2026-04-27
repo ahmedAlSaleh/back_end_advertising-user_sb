@@ -1,0 +1,29 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Framework/runtime caches
+/bootstrap/cache/*.php
+/storage/*.key
+/storage/app/public
+/storage/debugbar
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
+
+# Local tool/editor folders
+.claude/
+.scribe/
+.idea/
+.vscode/
+
+# OS / misc
+.DS_Store
+Thumbs.db
