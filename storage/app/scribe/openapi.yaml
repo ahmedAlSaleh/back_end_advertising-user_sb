@@ -1,0 +1,4068 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: 'Advertising Platform API - A comprehensive API for managing advertisements, stores, traders, and user interactions.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Authentication
+    description: ''
+  -
+    name: 'User Management'
+    description: ''
+  -
+    name: 'Trader Management'
+    description: ''
+  -
+    name: 'Advertisement Management'
+    description: ''
+  -
+    name: 'Post Management'
+    description: ''
+  -
+    name: 'Search & Analytics'
+    description: ''
+  -
+    name: Endpoints
+    description: ''
+  -
+    name: Interactions
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your authentication token by logging in. Most endpoints require Bearer token authentication using Laravel Sanctum.'
+security:
+  -
+    default: []
+paths:
+  /api/user/register:
+    post:
+      summary: "Register a new user account.\n\nCreates a new user account with the provided credentials. Upon successful registration,\nreturns user details along with an authentication token."
+      operationId: registerANewUserAccountCreatesANewUserAccountWithTheProvidedCredentialsUponSuccessfulRegistrationreturnsUserDetailsAlongWithAnAuthenticationToken
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'User registered successfully'
+                  data:
+                    user:
+                      id: 1
+                      name: 'John Doe'
+                      phone: '+1234567890'
+                      email: john.doe@example.com
+                    token: 1|abc123tokenxyz
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'User registered successfully'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'John Doe'
+                          phone:
+                            type: string
+                            example: '+1234567890'
+                          email:
+                            type: string
+                            example: john.doe@example.com
+                      token:
+                        type: string
+                        example: 1|abc123tokenxyz
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    phone:
+                      - 'The phone has already been taken.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      phone:
+                        type: array
+                        example:
+                          - 'The phone has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "User's full name."
+                  example: 'John Doe'
+                  nullable: false
+                phone:
+                  type: string
+                  description: "User's phone number (must be unique)."
+                  example: '+1234567890'
+                  nullable: false
+                email:
+                  type: string
+                  description: "optional User's email address."
+                  example: john.doe@example.com
+                  nullable: true
+                password:
+                  type: string
+                  description: "User's password (minimum 6 characters)."
+                  example: password123
+                  nullable: false
+                fcm_token:
+                  type: string
+                  description: 'optional Firebase Cloud Messaging token for push notifications.'
+                  example: fcm_token_here
+                  nullable: true
+              required:
+                - name
+                - phone
+                - password
+      security: []
+  /api/user/login:
+    post:
+      summary: "User login.\n\nAuthenticates a user with phone and password credentials and returns an authentication token."
+      operationId: userLoginAuthenticatesAUserWithPhoneAndPasswordCredentialsAndReturnsAnAuthenticationToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Login successful'
+                  data:
+                    user:
+                      id: 1
+                      name: 'John Doe'
+                      phone: '+1234567890'
+                      email: john.doe@example.com
+                    token: 1|abc123tokenxyz
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Login successful'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'John Doe'
+                          phone:
+                            type: string
+                            example: '+1234567890'
+                          email:
+                            type: string
+                            example: john.doe@example.com
+                      token:
+                        type: string
+                        example: 1|abc123tokenxyz
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Invalid credentials'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    phone:
+                      - 'The phone field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      phone:
+                        type: array
+                        example:
+                          - 'The phone field is required.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: "User's phone number."
+                  example: '+1234567890'
+                  nullable: false
+                password:
+                  type: string
+                  description: "User's password (minimum 6 characters)."
+                  example: password123
+                  nullable: false
+                fcm_token:
+                  type: string
+                  description: 'optional Firebase Cloud Messaging token for push notifications.'
+                  example: fcm_token_here
+                  nullable: true
+              required:
+                - phone
+                - password
+      security: []
+  /api/trader/register:
+    post:
+      summary: "Register a new trader account.\n\nCreates a new trader account with store details. Upon successful registration,\nreturns trader details along with an authentication token."
+      operationId: registerANewTraderAccountCreatesANewTraderAccountWithStoreDetailsUponSuccessfulRegistrationreturnsTraderDetailsAlongWithAnAuthenticationToken
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Trader registered successfully'
+                  data:
+                    trader:
+                      id: 1
+                      owner_contact_number: '+1234567890'
+                      city: 'New York'
+                      store:
+                        id: 1
+                        store_name: 'Electronics Store'
+                        store_owner_name: 'John Doe'
+                    token: 1|abc123tokenxyz
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Trader registered successfully'
+                  data:
+                    type: object
+                    properties:
+                      trader:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          owner_contact_number:
+                            type: string
+                            example: '+1234567890'
+                          city:
+                            type: string
+                            example: 'New York'
+                          store:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                              store_name:
+                                type: string
+                                example: 'Electronics Store'
+                              store_owner_name:
+                                type: string
+                                example: 'John Doe'
+                      token:
+                        type: string
+                        example: 1|abc123tokenxyz
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    owner_contact_number:
+                      - 'The owner contact number has already been taken.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      owner_contact_number:
+                        type: array
+                        example:
+                          - 'The owner contact number has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                store_owner_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: false
+                store_number:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: qxbajwbpilpmufinl
+                  nullable: false
+                sub_category_ids:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the sub_categories table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+                owner_contact_number:
+                  type: string
+                  description: "Trader's phone number (must be unique)."
+                  example: '+1234567890'
+                  nullable: false
+                password:
+                  type: string
+                  description: "Trader's password (minimum 6 characters)."
+                  example: password123
+                  nullable: false
+                whatsapp_number:
+                  type: string
+                  description: 'optional WhatsApp contact number.'
+                  example: '+1234567890'
+                  nullable: true
+                telegram_number:
+                  type: string
+                  description: 'optional Telegram contact number.'
+                  example: '+1234567890'
+                  nullable: true
+                city:
+                  type: string
+                  description: 'optional City where the store is located.'
+                  example: 'New York'
+                  nullable: true
+                social_media_link:
+                  type: string
+                  description: 'optional Social media profile link.'
+                  example: 'https://facebook.com/store'
+                  nullable: true
+                image:
+                  type: string
+                  description: ''
+                  example: null
+                  nullable: true
+                store_description:
+                  type: string
+                  description: 'optional Description of the store (max 500 characters).'
+                  example: 'Best electronics store in town'
+                  nullable: true
+                fcm_token:
+                  type: string
+                  description: 'optional Firebase Cloud Messaging token for push notifications.'
+                  example: fcm_token_here
+                  nullable: false
+              required:
+                - store_name
+                - store_owner_name
+                - store_number
+                - owner_contact_number
+                - password
+      security: []
+  /api/trader/login:
+    post:
+      summary: "Trader login.\n\nAuthenticates a trader with phone and password credentials and returns an authentication token."
+      operationId: traderLoginAuthenticatesATraderWithPhoneAndPasswordCredentialsAndReturnsAnAuthenticationToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Login successful'
+                  data:
+                    trader:
+                      id: 1
+                      owner_contact_number: '+1234567890'
+                      city: 'New York'
+                      store:
+                        id: 1
+                        store_name: 'Electronics Store'
+                    token: 1|abc123tokenxyz
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Login successful'
+                  data:
+                    type: object
+                    properties:
+                      trader:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          owner_contact_number:
+                            type: string
+                            example: '+1234567890'
+                          city:
+                            type: string
+                            example: 'New York'
+                          store:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                example: 1
+                              store_name:
+                                type: string
+                                example: 'Electronics Store'
+                      token:
+                        type: string
+                        example: 1|abc123tokenxyz
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Invalid credentials'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: "Trader's phone number."
+                  example: '+1234567890'
+                  nullable: false
+                password:
+                  type: string
+                  description: "Trader's password (minimum 6 characters)."
+                  example: password123
+                  nullable: false
+                fcm_token:
+                  type: string
+                  description: 'optional Firebase Cloud Messaging token for push notifications.'
+                  example: fcm_token_here
+                  nullable: true
+              required:
+                - phone
+                - password
+      security: []
+  /api/user/logout:
+    get:
+      summary: "User logout.\n\nLogs out the authenticated user by invalidating their current access token."
+      operationId: userLogoutLogsOutTheAuthenticatedUserByInvalidatingTheirCurrentAccessToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Logged out successfully'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Logged out successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - Authentication
+  /api/trader/logout:
+    get:
+      summary: "Trader logout.\n\nLogs out the authenticated trader by invalidating their current access token."
+      operationId: traderLogoutLogsOutTheAuthenticatedTraderByInvalidatingTheirCurrentAccessToken
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Logged out successfully'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Logged out successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - Authentication
+  /api/user/update/profile:
+    post:
+      summary: "Update user profile.\n\nUpdates the authenticated user's profile information including name and email."
+      operationId: updateUserProfileUpdatesTheAuthenticatedUsersProfileInformationIncludingNameAndEmail
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Profile updated successfully'
+                  data:
+                    id: 1
+                    name: 'Jane Doe'
+                    phone: '+1234567890'
+                    email: jane.doe@example.com
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Profile updated successfully'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'Jane Doe'
+                      phone:
+                        type: string
+                        example: '+1234567890'
+                      email:
+                        type: string
+                        example: jane.doe@example.com
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    email:
+                      - 'The email format is invalid.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The email format is invalid.'
+                        items:
+                          type: string
+      tags:
+        - 'User Management'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "optional User's full name."
+                  example: 'Jane Doe'
+                  nullable: true
+                email:
+                  type: string
+                  description: "optional User's email address."
+                  example: jane.doe@example.com
+                  nullable: true
+  /api/user/get/profile:
+    get:
+      summary: "Get authenticated user profile.\n\nRetrieves the complete profile information of the currently authenticated user."
+      operationId: getAuthenticatedUserProfileRetrievesTheCompleteProfileInformationOfTheCurrentlyAuthenticatedUser
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    id: 1
+                    name: 'John Doe'
+                    phone: '+1234567890'
+                    email: john.doe@example.com
+                    created_at: '2024-01-15T10:30:00.000000Z'
+                    updated_at: '2024-01-15T10:30:00.000000Z'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      phone:
+                        type: string
+                        example: '+1234567890'
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      created_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'User Management'
+  /api/cities:
+    get:
+      summary: "Get list of cities.\n\nRetrieves a list of all available cities in the system."
+      operationId: getListOfCitiesRetrievesAListOfAllAvailableCitiesInTheSystem
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    - 'New York'
+                    - 'Los Angeles'
+                    - Chicago
+                    - Houston
+                    - Phoenix
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    example:
+                      - 'New York'
+                      - 'Los Angeles'
+                      - Chicago
+                      - Houston
+                      - Phoenix
+                    items:
+                      type: string
+      tags:
+        - 'User Management'
+      security: []
+  /api/trader/update/profile:
+    post:
+      summary: "Update trader profile.\n\nUpdates the authenticated trader's profile information including city, contact numbers, and store description."
+      operationId: updateTraderProfileUpdatesTheAuthenticatedTradersProfileInformationIncludingCityContactNumbersAndStoreDescription
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Profile updated successfully'
+                  data:
+                    id: 1
+                    owner_contact_number: '+1234567890'
+                    city: 'Los Angeles'
+                    whatsapp_number: '+1234567890'
+                    store_description: 'Premium electronics retailer'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Profile updated successfully'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      owner_contact_number:
+                        type: string
+                        example: '+1234567890'
+                      city:
+                        type: string
+                        example: 'Los Angeles'
+                      whatsapp_number:
+                        type: string
+                        example: '+1234567890'
+                      store_description:
+                        type: string
+                        example: 'Premium electronics retailer'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Trader Management'
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                store_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                store_owner_name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: amniihfqcoynlazghdtqt
+                  nullable: true
+                store_number:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: qxbajwbpilpmufinl
+                  nullable: true
+                sub_category_ids:
+                  type: array
+                  description: 'The <code>id</code> of an existing record in the sub_categories table.'
+                  example:
+                    - 17
+                  items:
+                    type: integer
+                owner_contact_number:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: mqeopfuudtdsufvyv
+                  nullable: true
+                whatsapp_number:
+                  type: string
+                  description: 'optional WhatsApp contact number.'
+                  example: '+1234567890'
+                  nullable: true
+                telegram_number:
+                  type: string
+                  description: 'optional Telegram contact number.'
+                  example: '+1234567890'
+                  nullable: true
+                social_media_link:
+                  type: string
+                  description: 'optional Social media profile link.'
+                  example: 'https://facebook.com/store'
+                  nullable: true
+                image:
+                  type: string
+                  format: binary
+                  description: 'Must be a file. Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
+                store_description:
+                  type: string
+                  description: 'optional Description of the store (max 500 characters).'
+                  example: 'Premium electronics retailer'
+                  nullable: true
+                city:
+                  type: string
+                  description: 'optional City where the store is located.'
+                  example: 'Los Angeles'
+                  nullable: false
+  /api/trader/get/profile:
+    get:
+      summary: "Get authenticated trader profile.\n\nRetrieves the complete profile information of the currently authenticated trader including store details and subcategories."
+      operationId: getAuthenticatedTraderProfileRetrievesTheCompleteProfileInformationOfTheCurrentlyAuthenticatedTraderIncludingStoreDetailsAndSubcategories
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    id: 1
+                    owner_contact_number: '+1234567890'
+                    city: 'New York'
+                    whatsapp_number: '+1234567890'
+                    store:
+                      id: 1
+                      store_name: 'Electronics Store'
+                      store_owner_name: 'John Doe'
+                      subCategories:
+                        -
+                          id: 1
+                          name: Smartphones
+                          image: 'https://example.com/image.jpg'
+                    created_at: '2024-01-15T10:30:00.000000Z'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      owner_contact_number:
+                        type: string
+                        example: '+1234567890'
+                      city:
+                        type: string
+                        example: 'New York'
+                      whatsapp_number:
+                        type: string
+                        example: '+1234567890'
+                      store:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          store_name:
+                            type: string
+                            example: 'Electronics Store'
+                          store_owner_name:
+                            type: string
+                            example: 'John Doe'
+                          subCategories:
+                            type: array
+                            example:
+                              -
+                                id: 1
+                                name: Smartphones
+                                image: 'https://example.com/image.jpg'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  type: string
+                                  example: Smartphones
+                                image:
+                                  type: string
+                                  example: 'https://example.com/image.jpg'
+                      created_at:
+                        type: string
+                        example: '2024-01-15T10:30:00.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Trader Management'
+  /api/trader/change/password:
+    post:
+      summary: "Change trader password.\n\nAllows the authenticated trader to change their account password."
+      operationId: changeTraderPasswordAllowsTheAuthenticatedTraderToChangeTheirAccountPassword
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Password changed successfully'
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Password changed successfully'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Current password is incorrect'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Current password is incorrect'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    new_password:
+                      - 'The new password confirmation does not match.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      new_password:
+                        type: array
+                        example:
+                          - 'The new password confirmation does not match.'
+                        items:
+                          type: string
+      tags:
+        - 'Trader Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: false
+                password:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: false
+                current_password:
+                  type: string
+                  description: 'Current password.'
+                  example: oldpass123
+                  nullable: false
+                new_password:
+                  type: string
+                  description: 'New password (minimum 6 characters).'
+                  example: newpass456
+                  nullable: false
+                new_password_confirmation:
+                  type: string
+                  description: 'Confirmation of new password.'
+                  example: newpass456
+                  nullable: false
+              required:
+                - old_password
+                - password
+                - current_password
+                - new_password
+                - new_password_confirmation
+  /api/user/get_ads:
+    post:
+      summary: "Get list of advertisements.\n\nRetrieves a paginated list of advertisements filtered by category and type.\nAdvertisements can be either normal or special (promoted)."
+      operationId: getListOfAdvertisementsRetrievesAPaginatedListOfAdvertisementsFilteredByCategoryAndTypeAdvertisementsCanBeEitherNormalOrSpecialpromoted
+      description: ''
+      parameters:
+        -
+          in: query
+          name: category_id
+          description: 'optional Filter by store category ID.'
+          example: 5
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter by store category ID.'
+            example: 5
+            nullable: false
+        -
+          in: query
+          name: type
+          description: 'Advertisement type (normal or special).'
+          example: normal
+          required: true
+          schema:
+            type: string
+            description: 'Advertisement type (normal or special).'
+            example: normal
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 20
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        title: 'Summer Sale'
+                        description: '50% off on all items'
+                        price: 99.99
+                        images:
+                          - ad1.jpg
+                          - ad2.jpg
+                        type: normal
+                        store_id: 5
+                        rating: 4.5
+                        created_at: '2024-01-15T10:30:00.000000Z'
+                    total: 100
+                    per_page: 20
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            title: 'Summer Sale'
+                            description: '50% off on all items'
+                            price: 99.99
+                            images:
+                              - ad1.jpg
+                              - ad2.jpg
+                            type: normal
+                            store_id: 5
+                            rating: 4.5
+                            created_at: '2024-01-15T10:30:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: 'Summer Sale'
+                            description:
+                              type: string
+                              example: '50% off on all items'
+                            price:
+                              type: number
+                              example: 99.99
+                            images:
+                              type: array
+                              example:
+                                - ad1.jpg
+                                - ad2.jpg
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              example: normal
+                            store_id:
+                              type: integer
+                              example: 5
+                            rating:
+                              type: number
+                              example: 4.5
+                            created_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                      total:
+                        type: integer
+                        example: 100
+                      per_page:
+                        type: integer
+                        example: 20
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    type:
+                      - 'The type field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      type:
+                        type: array
+                        example:
+                          - 'The type field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Advertisement Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_id:
+                  type: integer
+                  description: 'The <code>category_id</code> of an existing record in the stores table.'
+                  example: 17
+                  nullable: true
+                type:
+                  type: string
+                  description: ''
+                  example: special
+                  nullable: false
+                  enum:
+                    - normal
+                    - special
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 56
+                  nullable: true
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 17
+                  nullable: true
+              required:
+                - type
+  /api/user/guest/get_ads:
+    post:
+      summary: "Get list of advertisements.\n\nRetrieves a paginated list of advertisements filtered by category and type.\nAdvertisements can be either normal or special (promoted)."
+      operationId: getListOfAdvertisementsRetrievesAPaginatedListOfAdvertisementsFilteredByCategoryAndTypeAdvertisementsCanBeEitherNormalOrSpecialpromoted
+      description: ''
+      parameters:
+        -
+          in: query
+          name: category_id
+          description: 'optional Filter by store category ID.'
+          example: 5
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter by store category ID.'
+            example: 5
+            nullable: false
+        -
+          in: query
+          name: type
+          description: 'Advertisement type (normal or special).'
+          example: normal
+          required: true
+          schema:
+            type: string
+            description: 'Advertisement type (normal or special).'
+            example: normal
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 20
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        title: 'Summer Sale'
+                        description: '50% off on all items'
+                        price: 99.99
+                        images:
+                          - ad1.jpg
+                          - ad2.jpg
+                        type: normal
+                        store_id: 5
+                        rating: 4.5
+                        created_at: '2024-01-15T10:30:00.000000Z'
+                    total: 100
+                    per_page: 20
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            title: 'Summer Sale'
+                            description: '50% off on all items'
+                            price: 99.99
+                            images:
+                              - ad1.jpg
+                              - ad2.jpg
+                            type: normal
+                            store_id: 5
+                            rating: 4.5
+                            created_at: '2024-01-15T10:30:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: 'Summer Sale'
+                            description:
+                              type: string
+                              example: '50% off on all items'
+                            price:
+                              type: number
+                              example: 99.99
+                            images:
+                              type: array
+                              example:
+                                - ad1.jpg
+                                - ad2.jpg
+                              items:
+                                type: string
+                            type:
+                              type: string
+                              example: normal
+                            store_id:
+                              type: integer
+                              example: 5
+                            rating:
+                              type: number
+                              example: 4.5
+                            created_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                      total:
+                        type: integer
+                        example: 100
+                      per_page:
+                        type: integer
+                        example: 20
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Validation errors'
+                  errors:
+                    type:
+                      - 'The type field is required.'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation errors'
+                  errors:
+                    type: object
+                    properties:
+                      type:
+                        type: array
+                        example:
+                          - 'The type field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Advertisement Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_id:
+                  type: integer
+                  description: 'The <code>category_id</code> of an existing record in the stores table.'
+                  example: 17
+                  nullable: true
+                type:
+                  type: string
+                  description: ''
+                  example: special
+                  nullable: false
+                  enum:
+                    - normal
+                    - special
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 56
+                  nullable: true
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 17
+                  nullable: true
+              required:
+                - type
+  /api/user/get_posts:
+    get:
+      summary: "Get list of posts.\n\nRetrieves a paginated list of posts from stores. Users can view all available posts."
+      operationId: getListOfPostsRetrievesAPaginatedListOfPostsFromStoresUsersCanViewAllAvailablePosts
+      description: ''
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 15
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        title: 'New Product Launch'
+                        images:
+                          - image1.jpg
+                          - image2.jpg
+                        store_id: 5
+                        likes_count: 25
+                        created_at: '2024-01-15T10:30:00.000000Z'
+                    total: 50
+                    per_page: 15
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            title: 'New Product Launch'
+                            images:
+                              - image1.jpg
+                              - image2.jpg
+                            store_id: 5
+                            likes_count: 25
+                            created_at: '2024-01-15T10:30:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: 'New Product Launch'
+                            images:
+                              type: array
+                              example:
+                                - image1.jpg
+                                - image2.jpg
+                              items:
+                                type: string
+                            store_id:
+                              type: integer
+                              example: 5
+                            likes_count:
+                              type: integer
+                              example: 25
+                            created_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                      total:
+                        type: integer
+                        example: 50
+                      per_page:
+                        type: integer
+                        example: 15
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Post Management'
+  /api/user/search:
+    get:
+      summary: "Search advertisements.\n\nSearches for advertisements based on keywords and filters."
+      operationId: searchAdvertisementsSearchesForAdvertisementsBasedOnKeywordsAndFilters
+      description: ''
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'optional Search keyword for advertisement title or description.'
+          example: laptop
+          required: false
+          schema:
+            type: string
+            description: 'optional Search keyword for advertisement title or description.'
+            example: laptop
+            nullable: false
+        -
+          in: query
+          name: category_id
+          description: 'optional Filter by category.'
+          example: 5
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter by category.'
+            example: 5
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 20
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        title: 'Gaming Laptop Sale'
+                        description: 'High performance laptop'
+                        price: 1299.99
+                        images:
+                          - laptop1.jpg
+                    total: 15
+                    per_page: 20
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            title: 'Gaming Laptop Sale'
+                            description: 'High performance laptop'
+                            price: 1299.99
+                            images:
+                              - laptop1.jpg
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: 'Gaming Laptop Sale'
+                            description:
+                              type: string
+                              example: 'High performance laptop'
+                            price:
+                              type: number
+                              example: 1299.99
+                            images:
+                              type: array
+                              example:
+                                - laptop1.jpg
+                              items:
+                                type: string
+                      total:
+                        type: integer
+                        example: 15
+                      per_page:
+                        type: integer
+                        example: 20
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Search & Analytics'
+  /api/user/search/store:
+    post:
+      summary: "Search stores.\n\nSearches for stores based on keywords and filters."
+      operationId: searchStoresSearchesForStoresBasedOnKeywordsAndFilters
+      description: ''
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'optional Search keyword for store name or description.'
+          example: electronics
+          required: false
+          schema:
+            type: string
+            description: 'optional Search keyword for store name or description.'
+            example: electronics
+            nullable: false
+        -
+          in: query
+          name: category_id
+          description: 'optional Filter by category.'
+          example: 3
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter by category.'
+            example: 3
+            nullable: false
+        -
+          in: query
+          name: city
+          description: 'optional Filter by city.'
+          example: 'New York'
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter by city.'
+            example: 'New York'
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 20
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 8
+                        store_name: 'Electronics Hub'
+                        city: 'New York'
+                        category_id: 3
+                        rating: 4.5
+                    total: 10
+                    per_page: 20
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 8
+                            store_name: 'Electronics Hub'
+                            city: 'New York'
+                            category_id: 3
+                            rating: 4.5
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 8
+                            store_name:
+                              type: string
+                              example: 'Electronics Hub'
+                            city:
+                              type: string
+                              example: 'New York'
+                            category_id:
+                              type: integer
+                              example: 3
+                            rating:
+                              type: number
+                              example: 4.5
+                      total:
+                        type: integer
+                        example: 10
+                      per_page:
+                        type: integer
+                        example: 20
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Search & Analytics'
+  /api/user/guest/search:
+    get:
+      summary: "Search advertisements.\n\nSearches for advertisements based on keywords and filters."
+      operationId: searchAdvertisementsSearchesForAdvertisementsBasedOnKeywordsAndFilters
+      description: ''
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'optional Search keyword for advertisement title or description.'
+          example: laptop
+          required: false
+          schema:
+            type: string
+            description: 'optional Search keyword for advertisement title or description.'
+            example: laptop
+            nullable: false
+        -
+          in: query
+          name: category_id
+          description: 'optional Filter by category.'
+          example: 5
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter by category.'
+            example: 5
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 20
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 1
+                        title: 'Gaming Laptop Sale'
+                        description: 'High performance laptop'
+                        price: 1299.99
+                        images:
+                          - laptop1.jpg
+                    total: 15
+                    per_page: 20
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            title: 'Gaming Laptop Sale'
+                            description: 'High performance laptop'
+                            price: 1299.99
+                            images:
+                              - laptop1.jpg
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: 'Gaming Laptop Sale'
+                            description:
+                              type: string
+                              example: 'High performance laptop'
+                            price:
+                              type: number
+                              example: 1299.99
+                            images:
+                              type: array
+                              example:
+                                - laptop1.jpg
+                              items:
+                                type: string
+                      total:
+                        type: integer
+                        example: 15
+                      per_page:
+                        type: integer
+                        example: 20
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Search & Analytics'
+  /api/user/guest/search/store:
+    post:
+      summary: "Search stores.\n\nSearches for stores based on keywords and filters."
+      operationId: searchStoresSearchesForStoresBasedOnKeywordsAndFilters
+      description: ''
+      parameters:
+        -
+          in: query
+          name: keyword
+          description: 'optional Search keyword for store name or description.'
+          example: electronics
+          required: false
+          schema:
+            type: string
+            description: 'optional Search keyword for store name or description.'
+            example: electronics
+            nullable: false
+        -
+          in: query
+          name: category_id
+          description: 'optional Filter by category.'
+          example: 3
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter by category.'
+            example: 3
+            nullable: false
+        -
+          in: query
+          name: city
+          description: 'optional Filter by city.'
+          example: 'New York'
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter by city.'
+            example: 'New York'
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 20
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 8
+                        store_name: 'Electronics Hub'
+                        city: 'New York'
+                        category_id: 3
+                        rating: 4.5
+                    total: 10
+                    per_page: 20
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 8
+                            store_name: 'Electronics Hub'
+                            city: 'New York'
+                            category_id: 3
+                            rating: 4.5
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 8
+                            store_name:
+                              type: string
+                              example: 'Electronics Hub'
+                            city:
+                              type: string
+                              example: 'New York'
+                            category_id:
+                              type: integer
+                              example: 3
+                            rating:
+                              type: number
+                              example: 4.5
+                      total:
+                        type: integer
+                        example: 10
+                      per_page:
+                        type: integer
+                        example: 20
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - 'Search & Analytics'
+  /api/categories:
+    get:
+      summary: ''
+      operationId: getApiCategories
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data: []
+                properties:
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+  /api/posts/create:
+    post:
+      summary: ''
+      operationId: postApiPostsCreate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                images:
+                  type: array
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - title
+                - images
+  /api/posts/mine:
+    get:
+      summary: ''
+      operationId: getApiPostsMine
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/posts/delete/{post}':
+    post:
+      summary: ''
+      operationId: postApiPostsDeletePost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: post
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/ads/create:
+    post:
+      summary: ''
+      operationId: postApiAdsCreate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: false
+                description:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'Dolores molestias ipsam sit.'
+                  nullable: false
+                notes:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: hfqcoynlazghdtqtqxbaj
+                  nullable: true
+                price:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: wbpilpmufinllwloauydl
+                  nullable: false
+                type:
+                  type: string
+                  description: ''
+                  example: normal
+                  nullable: false
+                  enum:
+                    - normal
+                    - special
+                scheduled_at:
+                  type: string
+                  description: 'Must be a valid date. Must be a date after <code>now</code>.'
+                  example: '2107-01-06'
+                  nullable: true
+                expires_at:
+                  type: string
+                  description: 'Must be a valid date. Must be a date after <code>scheduled_at</code>.'
+                  example: '2107-01-06'
+                  nullable: true
+                images:
+                  type: array
+                  description: 'Must be an image.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - title
+                - description
+                - price
+                - type
+                - images
+  /api/ads/mine:
+    get:
+      summary: ''
+      operationId: getApiAdsMine
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/ads/delete/{ads}':
+    post:
+      summary: ''
+      operationId: postApiAdsDeleteAds
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: ads
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/post/like/{post}':
+    post:
+      summary: ''
+      operationId: postApiPostLikePost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: post
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/post/dislike/{post}':
+    post:
+      summary: ''
+      operationId: postApiPostDislikePost
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: post
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/get/point:
+    get:
+      summary: ''
+      operationId: getApiGetPoint
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/get/wallet:
+    get:
+      summary: ''
+      operationId: getApiGetWallet
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/RechargeByCode:
+    post:
+      summary: ''
+      operationId: postApiRechargeByCode
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: vmqeopfuudtdsufvyvddqamniihfqcoynlazghdtqtqxbajwbpilpmufinllwloauydlsmsjury
+                  nullable: false
+                point_number:
+                  type: integer
+                  description: ''
+                  example: 17
+                  nullable: false
+              required:
+                - code
+                - point_number
+  '/api/user/getStore_byCat/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserGetStore_byCatId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the getStore byCat.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/user/show_store/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserShow_storeId
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the show store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/user/favoriteAdv:
+    get:
+      summary: ''
+      operationId: getApiUserFavoriteAdv
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/user/favoriteStores:
+    get:
+      summary: ''
+      operationId: getApiUserFavoriteStores
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/user/rate:
+    post:
+      summary: ''
+      operationId: postApiUserRate
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                rate:
+                  type: string
+                  description: ''
+                  example: consequatur
+                  nullable: false
+                adv_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the advertisements table.'
+                  example: consequatur
+                  nullable: false
+              required:
+                - rate
+                - adv_id
+  '/api/user/guest/getStore_byCat/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserGuestGetStore_byCatId
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data: []
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    example: []
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the getStore byCat.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/user/getStore_Post/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserGetStore_PostId
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  posts:
+                    current_page: 1
+                    data: []
+                    first_page_url: 'http://localhost/api/user/getStore_Post/consequatur?page=1'
+                    from: null
+                    last_page: 1
+                    last_page_url: 'http://localhost/api/user/getStore_Post/consequatur?page=1'
+                    links:
+                      -
+                        url: null
+                        label: '&laquo; Previous'
+                        active: false
+                      -
+                        url: 'http://localhost/api/user/getStore_Post/consequatur?page=1'
+                        label: '1'
+                        active: true
+                      -
+                        url: null
+                        label: 'Next &raquo;'
+                        active: false
+                    next_page_url: null
+                    path: 'http://localhost/api/user/getStore_Post/consequatur'
+                    per_page: 5
+                    prev_page_url: null
+                    to: null
+                    total: 0
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  posts:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example: []
+                      first_page_url:
+                        type: string
+                        example: 'http://localhost/api/user/getStore_Post/consequatur?page=1'
+                      from:
+                        type: string
+                        example: null
+                      last_page:
+                        type: integer
+                        example: 1
+                      last_page_url:
+                        type: string
+                        example: 'http://localhost/api/user/getStore_Post/consequatur?page=1'
+                      links:
+                        type: array
+                        example:
+                          -
+                            url: null
+                            label: '&laquo; Previous'
+                            active: false
+                          -
+                            url: 'http://localhost/api/user/getStore_Post/consequatur?page=1'
+                            label: '1'
+                            active: true
+                          -
+                            url: null
+                            label: 'Next &raquo;'
+                            active: false
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                              example: null
+                            label:
+                              type: string
+                              example: '&laquo; Previous'
+                            active:
+                              type: boolean
+                              example: false
+                      next_page_url:
+                        type: string
+                        example: null
+                      path:
+                        type: string
+                        example: 'http://localhost/api/user/getStore_Post/consequatur'
+                      per_page:
+                        type: integer
+                        example: 5
+                      prev_page_url:
+                        type: string
+                        example: null
+                      to:
+                        type: string
+                        example: null
+                      total:
+                        type: integer
+                        example: 0
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the getStore Post.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/user/getStore_pyAdv/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserGetStore_pyAdvId
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the getStore pyAdv.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/user/guest/show_store/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserGuestShow_storeId
+      description: ''
+      parameters: []
+      responses:
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Store] consequatur'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Store] consequatur'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the show store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/user/getStore_Ads/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserGetStore_AdsId
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the getStore Ad.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/user/rate/{id}':
+    get:
+      summary: ''
+      operationId: getApiUserRateId
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Server Error'
+                properties:
+                  message:
+                    type: string
+                    example: 'Server Error'
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the rate.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/support:
+    get:
+      summary: ''
+      operationId: getApiSupport
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    text: "شكراً لاستخدامك تطبيق أعلاني\nمطور ومصمم تطبيقات متخصص في بناء حلول تقنية مخصصة ومشاريع رقمية. إذا كان لديك فكرة مشروع أو تبحث عن تطوير تطبيق احترافي، يسعدني التواصل معك."
+                    social:
+                      telegram:
+                        link: 'https://t.me/Ahmedasml'
+                        image: ''
+                      youtube:
+                        link: 'https://www.youtube.com/@Ahmed-AlSaleh'
+                        image: ''
+                      linkedin:
+                        link: 'https://www.linkedin.com/in/ahmed-al-saleh-0424ba208/'
+                        image: ''
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      text:
+                        type: string
+                        example: "شكراً لاستخدامك تطبيق أعلاني\nمطور ومصمم تطبيقات متخصص في بناء حلول تقنية مخصصة ومشاريع رقمية. إذا كان لديك فكرة مشروع أو تبحث عن تطوير تطبيق احترافي، يسعدني التواصل معك."
+                      social:
+                        type: object
+                        properties:
+                          telegram:
+                            type: object
+                            properties:
+                              link:
+                                type: string
+                                example: 'https://t.me/Ahmedasml'
+                              image:
+                                type: string
+                                example: ''
+                          youtube:
+                            type: object
+                            properties:
+                              link:
+                                type: string
+                                example: 'https://www.youtube.com/@Ahmed-AlSaleh'
+                              image:
+                                type: string
+                                example: ''
+                          linkedin:
+                            type: object
+                            properties:
+                              link:
+                                type: string
+                                example: 'https://www.linkedin.com/in/ahmed-al-saleh-0424ba208/'
+                              image:
+                                type: string
+                                example: ''
+      tags:
+        - Endpoints
+  /api/update/version:
+    post:
+      summary: ''
+      operationId: postApiUpdateVersion
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+  /api/version:
+    get:
+      summary: ''
+      operationId: getApiVersion
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data: null
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - Endpoints
+  /api/search/advanced:
+    post:
+      summary: 'Advanced search for advertisements'
+      operationId: advancedSearchForAdvertisements
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyword:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: vmqeopfuudtdsufvyvddq
+                  nullable: true
+                category_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the categories table.'
+                  example: 17
+                  nullable: true
+                sub_category_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the sub_categories table.'
+                  example: 17
+                  nullable: true
+                city:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: mqeopfuudtdsufvyvddqa
+                  nullable: true
+                price_min:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 45
+                  nullable: true
+                price_max:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 46
+                  nullable: true
+                rating_min:
+                  type: number
+                  description: 'Must be at least 0. Must not be greater than 5.'
+                  example: 2
+                  nullable: true
+                sort_by:
+                  type: string
+                  description: ''
+                  example: newest
+                  nullable: true
+                  enum:
+                    - newest
+                    - price
+                    - rating
+                sort_order:
+                  type: string
+                  description: ''
+                  example: desc
+                  nullable: true
+                  enum:
+                    - asc
+                    - desc
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 6
+                  nullable: true
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 57
+                  nullable: true
+  /api/trader/analytics/overview:
+    get:
+      summary: 'Get analytics overview for the authenticated trader'
+      operationId: getAnalyticsOverviewForTheAuthenticatedTrader
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/trader/analytics/ads:
+    get:
+      summary: 'Get analytics for each advertisement'
+      operationId: getAnalyticsForEachAdvertisement
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/trader/analytics/chart:
+    get:
+      summary: 'Get chart data for a specific period'
+      operationId: getChartDataForASpecificPeriod
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/promotion-packages:
+    get:
+      summary: 'Get all available promotion packages'
+      operationId: getAllAvailablePromotionPackages
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: "Failed to retrieve packages: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'advertising_db.promotion_packages' doesn't exist (Connection: mysql, SQL: select * from `promotion_packages` where `is_active` = 1 order by `price_points` asc)"
+                  errors: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Failed to retrieve packages: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'advertising_db.promotion_packages' doesn't exist (Connection: mysql, SQL: select * from `promotion_packages` where `is_active` = 1 order by `price_points` asc)"
+                  errors:
+                    type: string
+                    example: null
+      tags:
+        - Endpoints
+  /api/ads/featured:
+    get:
+      summary: 'Get all featured advertisements'
+      operationId: getAllFeaturedAdvertisements
+      description: ''
+      parameters: []
+      responses:
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: "Failed to retrieve featured ads: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_featured' in 'where clause' (Connection: mysql, SQL: select count(*) as aggregate from `advertisements` where `is_featured` = 1 and `featured_until` > 2025-12-07 19:14:04)"
+                  errors: null
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Failed to retrieve featured ads: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_featured' in 'where clause' (Connection: mysql, SQL: select count(*) as aggregate from `advertisements` where `is_featured` = 1 and `featured_until` > 2025-12-07 19:14:04)"
+                  errors:
+                    type: string
+                    example: null
+      tags:
+        - Endpoints
+  '/api/trader/ads/{id}/promote':
+    post:
+      summary: 'Promote an advertisement (Trader only)'
+      operationId: promoteAnAdvertisementTraderOnly
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                package_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the promotion_packages table.'
+                  example: 17
+                  nullable: false
+              required:
+                - package_id
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the ad.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/trader/ads/{id}/status':
+    put:
+      summary: 'Update advertisement status'
+      operationId: updateAdvertisementStatus
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  nullable: false
+                  enum:
+                    - draft
+                    - scheduled
+                    - active
+                    - expired
+                    - paused
+              required:
+                - status
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the ad.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/trader/ads/scheduled:
+    get:
+      summary: 'Get scheduled advertisements'
+      operationId: getScheduledAdvertisements
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  /api/trader/ads/expired:
+    get:
+      summary: 'Get expired advertisements'
+      operationId: getExpiredAdvertisements
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/trader/ads/{id}/renew':
+    post:
+      summary: 'Renew expired advertisement'
+      operationId: renewExpiredAdvertisement
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expires_at:
+                  type: string
+                  description: 'Must be a valid date. Must be a date after <code>now</code>.'
+                  example: '2107-01-06'
+                  nullable: true
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the ad.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/trader/store/hours:
+    get:
+      summary: 'Get store hours for authenticated trader'
+      operationId: getStoreHoursForAuthenticatedTrader
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    post:
+      summary: 'Create or update store hours'
+      operationId: createOrUpdateStoreHours
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hours:
+                  type: array
+                  description: ''
+                  example:
+                    - []
+                  items:
+                    type: object
+                    properties:
+                      day:
+                        type: string
+                        description: ''
+                        example: consequatur
+                        nullable: false
+                      opens_at:
+                        type: string
+                        description: ''
+                        example: consequatur
+                        nullable: true
+                      closes_at:
+                        type: string
+                        description: ''
+                        example: consequatur
+                        nullable: true
+                      is_closed:
+                        type: boolean
+                        description: ''
+                        example: false
+                        nullable: false
+                    required:
+                      - day
+              required:
+                - hours
+  /api/reports/reasons:
+    get:
+      summary: 'Get available report reasons'
+      operationId: getAvailableReportReasons
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Report reasons retrieved successfully'
+                  data:
+                    reasons:
+                      -
+                        value: spam
+                        label: 'Spam or Scam'
+                      -
+                        value: fraud
+                        label: 'Fraud or Deception'
+                      -
+                        value: inappropriate
+                        label: 'Inappropriate Content'
+                      -
+                        value: misleading
+                        label: 'Misleading Information'
+                      -
+                        value: offensive
+                        label: 'Offensive Content'
+                      -
+                        value: other
+                        label: Other
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Report reasons retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      reasons:
+                        type: array
+                        example:
+                          -
+                            value: spam
+                            label: 'Spam or Scam'
+                          -
+                            value: fraud
+                            label: 'Fraud or Deception'
+                          -
+                            value: inappropriate
+                            label: 'Inappropriate Content'
+                          -
+                            value: misleading
+                            label: 'Misleading Information'
+                          -
+                            value: offensive
+                            label: 'Offensive Content'
+                          -
+                            value: other
+                            label: Other
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              example: spam
+                            label:
+                              type: string
+                              example: 'Spam or Scam'
+      tags:
+        - Endpoints
+  /api/reports:
+    post:
+      summary: 'Create a new report'
+      operationId: createANewReport
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reportable_type:
+                  type: string
+                  description: ''
+                  example: post
+                  nullable: false
+                  enum:
+                    - advertisement
+                    - store
+                    - trader
+                    - post
+                reportable_id:
+                  type: integer
+                  description: ''
+                  example: 17
+                  nullable: false
+                reason:
+                  type: string
+                  description: ''
+                  example: misleading
+                  nullable: false
+                  enum:
+                    - spam
+                    - fraud
+                    - inappropriate
+                    - misleading
+                    - offensive
+                    - other
+                description:
+                  type: string
+                  description: 'Must not be greater than 1000 characters.'
+                  example: 'Amet iste laborum eius est dolor dolores.'
+                  nullable: true
+              required:
+                - reportable_type
+                - reportable_id
+                - reason
+  /api/user/reports:
+    get:
+      summary: "Get authenticated user's reports"
+      operationId: getAuthenticatedUsersReports
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+  '/api/user/add_to_favorite/{adv_id}':
+    get:
+      summary: "Toggle favorite advertisement.\n\nAdds or removes an advertisement from the authenticated user's favorites list.\nIf the advertisement is already favorited, it will be unfavorited and vice versa."
+      operationId: toggleFavoriteAdvertisementAddsOrRemovesAnAdvertisementFromTheAuthenticatedUsersFavoritesListIfTheAdvertisementIsAlreadyFavoritedItWillBeUnfavoritedAndViceVersa
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      status: true
+                      message: 'Advertisement added to favorites'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Advertisement added to favorites'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      status: true
+                      message: 'Advertisement removed from favorites'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Advertisement removed from favorites'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Advertisement not found'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Advertisement not found'
+      tags:
+        - Interactions
+    parameters:
+      -
+        in: path
+        name: adv_id
+        description: 'The ID of the adv.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: request
+        description: 'Advertisement ID to toggle favorite status.'
+        example: 15
+        required: true
+        schema:
+          type: integer
+  '/api/user/add_store_to_favorite/{store_id}':
+    get:
+      summary: "Toggle favorite store.\n\nAdds or removes a store from the authenticated user's favorites list.\nIf the store is already favorited, it will be unfavorited and vice versa."
+      operationId: toggleFavoriteStoreAddsOrRemovesAStoreFromTheAuthenticatedUsersFavoritesListIfTheStoreIsAlreadyFavoritedItWillBeUnfavoritedAndViceVersa
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      status: true
+                      message: 'Store added to favorites'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Store added to favorites'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      status: true
+                      message: 'Store removed from favorites'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Store removed from favorites'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Store not found'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Store not found'
+      tags:
+        - Interactions
+    parameters:
+      -
+        in: path
+        name: store_id
+        description: 'The ID of the store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: request
+        description: 'Store ID to toggle favorite status.'
+        example: 8
+        required: true
+        schema:
+          type: integer
+  '/api/user/block/store/{id}':
+    get:
+      summary: "Toggle block store.\n\nBlocks or unblocks a store for the authenticated user. Blocked stores and their\nadvertisements will be hidden from the user's feed."
+      operationId: toggleBlockStoreBlocksOrUnblocksAStoreForTheAuthenticatedUserBlockedStoresAndTheiradvertisementsWillBeHiddenFromTheUsersFeed
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      status: true
+                      message: 'Store has been blocked'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Store has been blocked'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      status: true
+                      message: 'Store has been unblocked'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Store has been unblocked'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Store not found'
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Store not found'
+      tags:
+        - Interactions
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the store.'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: request
+        description: 'Store ID to toggle block status.'
+        example: 12
+        required: true
+        schema:
+          type: integer
+  /api/user/blocked/stores:
+    get:
+      summary: "Get blocked stores.\n\nRetrieves a paginated list of all stores that the authenticated user has blocked."
+      operationId: getBlockedStoresRetrievesAPaginatedListOfAllStoresThatTheAuthenticatedUserHasBlocked
+      description: ''
+      parameters:
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of items per page.'
+          example: 15
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of items per page.'
+            example: 15
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number.'
+            example: 1
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  data:
+                    current_page: 1
+                    data:
+                      -
+                        id: 12
+                        store_name: 'Blocked Store'
+                        category_id: 3
+                        blocked_at: '2024-01-15T10:30:00.000000Z'
+                    total: 5
+                    per_page: 15
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 12
+                            store_name: 'Blocked Store'
+                            category_id: 3
+                            blocked_at: '2024-01-15T10:30:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 12
+                            store_name:
+                              type: string
+                              example: 'Blocked Store'
+                            category_id:
+                              type: integer
+                              example: 3
+                            blocked_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                      total:
+                        type: integer
+                        example: 5
+                      per_page:
+                        type: integer
+                        example: 15
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: Unauthenticated
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthenticated
+      tags:
+        - Interactions
