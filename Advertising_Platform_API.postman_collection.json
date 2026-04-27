@@ -1,0 +1,713 @@
+{
+  "info": {
+    "name": "Advertising Platform API",
+    "description": "Complete API collection for the Advertising Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "User Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ahmed Mohammed\",\n  \"phone\": \"07701234567\",\n  \"email\": \"ahmed@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/user/register",
+              "host": ["{{base_url}}"],
+              "path": ["user", "register"]
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"07701234567\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/user/login",
+              "host": ["{{base_url}}"],
+              "path": ["user", "login"]
+            }
+          }
+        },
+        {
+          "name": "Trader Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"owner_contact_number\": \"07701234567\",\n  \"password\": \"password123\",\n  \"city\": \"بغداد\",\n  \"store_description\": \"متجر إلكترونيات\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trader/register",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "register"]
+            }
+          }
+        },
+        {
+          "name": "Trader Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"07701234567\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trader/login",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "login"]
+            }
+          }
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/logout",
+              "host": ["{{base_url}}"],
+              "path": ["user", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Trader Logout",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trader/logout",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Advertisements",
+      "item": [
+        {
+          "name": "Create Advertisement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "iPhone 13 Pro Max",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "هاتف ايفون مستعمل نظيف",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "350000",
+                  "type": "text"
+                },
+                {
+                  "key": "category_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "sub_category_id",
+                  "value": "2",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/ads/create",
+              "host": ["{{base_url}}"],
+              "path": ["ads", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get My Ads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ads/mine",
+              "host": ["{{base_url}}"],
+              "path": ["ads", "mine"]
+            }
+          }
+        },
+        {
+          "name": "Get Ads (User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"page\": 1,\n  \"per_page\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/user/get_ads",
+              "host": ["{{base_url}}"],
+              "path": ["user", "get_ads"]
+            }
+          }
+        },
+        {
+          "name": "Get Featured Ads",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ads/featured",
+              "host": ["{{base_url}}"],
+              "path": ["ads", "featured"]
+            }
+          }
+        },
+        {
+          "name": "Delete Ad",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ads/delete/1",
+              "host": ["{{base_url}}"],
+              "path": ["ads", "delete", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Posts",
+      "item": [
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "أبحث عن ايفون 13",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/create",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/get_posts",
+              "host": ["{{base_url}}"],
+              "path": ["user", "get_posts"]
+            }
+          }
+        },
+        {
+          "name": "Get My Posts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/mine",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "mine"]
+            }
+          }
+        },
+        {
+          "name": "Like Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/post/like/1",
+              "host": ["{{base_url}}"],
+              "path": ["post", "like", "1"]
+            }
+          }
+        },
+        {
+          "name": "Dislike Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/post/dislike/1",
+              "host": ["{{base_url}}"],
+              "path": ["post", "dislike", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/delete/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "delete", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Search",
+      "item": [
+        {
+          "name": "Basic Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/search?q=ايفون",
+              "host": ["{{base_url}}"],
+              "path": ["user", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "ايفون"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Advanced Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"ايفون\",\n  \"category_id\": 1,\n  \"min_price\": 100000,\n  \"max_price\": 500000,\n  \"city\": \"بغداد\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/search/advanced",
+              "host": ["{{base_url}}"],
+              "path": ["search", "advanced"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Analytics",
+      "item": [
+        {
+          "name": "Get Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trader/analytics/overview",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "analytics", "overview"]
+            }
+          }
+        },
+        {
+          "name": "Get Ads Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trader/analytics/ads",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "analytics", "ads"]
+            }
+          }
+        },
+        {
+          "name": "Get Chart Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/trader/analytics/chart?period=week",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "analytics", "chart"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "week"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Promotions",
+      "item": [
+        {
+          "name": "Get Packages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/promotion-packages",
+              "host": ["{{base_url}}"],
+              "path": ["promotion-packages"]
+            }
+          }
+        },
+        {
+          "name": "Promote Ad",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"package_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/trader/ads/1/promote",
+              "host": ["{{base_url}}"],
+              "path": ["trader", "ads", "1", "promote"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Reports",
+      "item": [
+        {
+          "name": "Get Report Reasons",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/reasons",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "reasons"]
+            }
+          }
+        },
+        {
+          "name": "Submit Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reportable_type\": \"advertisement\",\n  \"reportable_id\": 1,\n  \"reason\": \"spam\",\n  \"description\": \"محتوى مزعج\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            }
+          }
+        },
+        {
+          "name": "Get My Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/reports",
+              "host": ["{{base_url}}"],
+              "path": ["user", "reports"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Wallet & Points",
+      "item": [
+        {
+          "name": "Get Wallet",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get/wallet",
+              "host": ["{{base_url}}"],
+              "path": ["get", "wallet"]
+            }
+          }
+        },
+        {
+          "name": "Get Points",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/get/point",
+              "host": ["{{base_url}}"],
+              "path": ["get", "point"]
+            }
+          }
+        },
+        {
+          "name": "Recharge by Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"ABC123XYZ456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/RechargeByCode",
+              "host": ["{{base_url}}"],
+              "path": ["RechargeByCode"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Utilities",
+      "item": [
+        {
+          "name": "Get Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cities",
+              "host": ["{{base_url}}"],
+              "path": ["cities"]
+            }
+          }
+        },
+        {
+          "name": "Get Support Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/support",
+              "host": ["{{base_url}}"],
+              "path": ["support"]
+            }
+          }
+        },
+        {
+          "name": "Get Version",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/version",
+              "host": ["{{base_url}}"],
+              "path": ["version"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
